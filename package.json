@@ -1,8 +1,21 @@
 {
   "name": "readme-ai",
+  "version": "0.1.0",
   "module": "index.ts",
   "type": "module",
   "description": "AI-powered CLI that reads your codebase and generates your README automatically.",
+  "author": "dipeshgavit666",
+  "license": "MIT",
+  "keywords": [
+    "readme",
+    "ai",
+    "cli",
+    "documentation",
+    "generator",
+    "gemini",
+    "anthropic",
+    "openai"
+  ],
   "bin": {
     "readme-ai": "./dist/index.js"
   },
@@ -12,7 +25,9 @@
     "prepublishOnly": "bun run build"
   },
   "files": [
-    "dist/"
+    "dist/",
+    "README.md",
+    "LICENSE"
   ],
   "devDependencies": {
     "@types/bun": "latest",

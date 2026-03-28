@@ -4,17 +4,17 @@ Automated README generation and maintenance powered by LLMs.
 
 ## What it does
 
-`readme-ai` analyzes your project's source code, folder structure, and git history to generate or update professional `README.md` files. It intelligently gathers context from your files—including recent code changes via `git diff`—and utilizes AI models like Claude or Gemini to draft documentation that stays in sync with your implementation.
+`readme-ai` analyzes your project's source code, directory structure, and git history to generate or update professional `README.md` files. It gathers deep context from your repository—including recent code changes via `git diff`—and utilizes AI models (Claude or Gemini) to draft documentation that remains perfectly in sync with your implementation.
 
-The tool automatically validates the generated markdown for quality and creates a backup (`.readme-ai.bak`) of your existing README before performing an atomic write.
+The tool performs atomic writes and automatically creates a backup (`.readme-ai.bak`) of your existing README before making any changes.
 
 ## Why it exists
 
-Writing and maintaining documentation is a repetitive task that often lags behind actual code changes. This tool automates the process by understanding the technical context of your repository, ensuring that your project's first point of contact for developers is always accurate and up-to-date.
+Technical documentation often becomes outdated as soon as code is committed. `readme-ai` eliminates the manual overhead of updating READMEs by understanding the technical context of your repo, ensuring your project's first point of contact for developers is always accurate, concise, and up-to-date.
 
 ## Installation
 
-This project requires [Bun](https://bun.sh).
+This project is built with [Bun](https://bun.sh).
 
 ```bash
 bun install
@@ -22,39 +22,38 @@ bun install
 
 ## Usage
 
-To generate or update the README for the current directory:
+To generate or update the README for the current directory using the default provider:
 
 ```bash
 # Using default provider (Gemini)
 bun run dev
 
-# Specify a provider and output path
-bun run src/index.ts --provider anthropic --output DOCS.md
+# Specify a provider and custom output path
+bun run dev --provider anthropic --output DOCS.md
+
+# Run a dry run to see the output in stdout
+bun run dev --dry-run
 ```
 
 ### CLI Arguments
 
-| Argument           | Description                                      |
-| ------------------ | ------------------------------------------------ |
-| `--provider`, `-p` | AI provider to use (`anthropic` or `gemini`)     |
-| `--path`, `--repo` | Path to the repository to analyze (default: `.`) |
-| `--output`, `-o`   | Output filename (default: `README.md`)           |
-| `--dry-run`, `-d`  | Generate the README without writing to disk      |
-
-### GitHub Action
-
-This tool can be integrated into your CI/CD pipeline using the provided `action.yml`. Add it to your workflow to automatically suggest README updates on pull requests.
+| Argument     | Short    | Description                                      |
+| :----------- | :------- | :----------------------------------------------- |
+| `--provider` | `-p`     | AI provider to use (`anthropic` or `gemini`)     |
+| `--path`     | `--repo` | Path to the repository to analyze (default: `.`) |
+| `--output`   | `-o`     | Output filename (default: `README.md`)           |
+| `--dry-run`  | `-d`     | Generate the README without writing to disk      |
+| `--help`     | `-h`     | Show help message                                |
 
 ## Configuration
 
-Configure the tool using environment variables. Bun automatically loads variables from a `.env` file if present.
+Configure the tool using environment variables. Bun automatically loads variables from a `.env` file.
 
 | Variable             | Description                                                     | Default  |
-| -------------------- | --------------------------------------------------------------- | -------- |
-| `README_AI_PROVIDER` | AI provider to use (`gemini` or `anthropic`)                    | `gemini` |
+| :------------------- | :-------------------------------------------------------------- | :------- |
+| `README_AI_PROVIDER` | Default AI provider                                             | `gemini` |
 | `GEMINI_API_KEY`     | API key from [Google AI Studio](https://aistudio.google.com)    | -        |
 | `ANTHROPIC_API_KEY`  | API key from [Anthropic Console](https://console.anthropic.com) | -        |
-| `NODE_ENV`           | Environment mode (`development` or `production`)                | -        |
 
 ### Supported Models
 
@@ -63,10 +62,10 @@ Configure the tool using environment variables. Bun automatically loads variable
 
 ## How it works
 
-1. **Context Gathering**: Scans the repository for `package.json` metadata, directory hierarchy, and relevant source files (filtering by common extensions).
-2. **Change Analysis**: Performs a `git diff HEAD` to identify recent changes, allowing the AI to prioritize updates based on your latest work.
-3. **Agentic Writing**: Passes the gathered context through a specialized system prompt designed for technical writing to ensure concise, well-formatted output.
-4. **Safe Writing**: Validates that the AI response is non-empty and starts with a proper H1 header before performing an atomic write with a file backup.
+1.  **Context Gathering**: Scans the repository for `package.json` metadata, folder hierarchy, and source files (supporting `.ts`, `.py`, `.go`, `.rs`, etc.).
+2.  **Change Analysis**: Detects recent changes using `git diff HEAD` to prioritize documentation updates for new features or fixes.
+3.  **Agentic Writing**: Uses a specialized system prompt to ensure the AI produces concise, developer-centric markdown.
+4.  **Safe Writing**: Validates generated content (starts with H1, non-empty) and creates an atomic backup before updating the target file.
 
 ## How to contribute
 
@@ -75,5 +74,3 @@ Configure the tool using environment variables. Bun automatically loads variable
 3. Submit a pull request with a clear description of your changes.
 
 ## License
-
-This project is currently private and does not have an open-source license. All rights reserved.
