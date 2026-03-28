@@ -4,7 +4,7 @@ Automated README generation and maintenance powered by LLMs.
 
 ## What it does
 
-`readme-ai` analyzes your project's source code, folder structure, and git history to generate or update professional `README.md` files. It intelligently gathers context from your files—including recent code changes via `git diff`—and utilizes AI models like Claude or Gemini to draft documentation that stays in sync with your implementation. 
+`readme-ai` analyzes your project's source code, folder structure, and git history to generate or update professional `README.md` files. It intelligently gathers context from your files—including recent code changes via `git diff`—and utilizes AI models like Claude or Gemini to draft documentation that stays in sync with your implementation.
 
 The tool automatically validates the generated markdown for quality and creates a backup (`.readme-ai.bak`) of your existing README before performing an atomic write.
 
@@ -34,12 +34,12 @@ bun run src/index.ts --provider anthropic --output DOCS.md
 
 ### CLI Arguments
 
-| Argument | Description |
-| --- | --- |
-| `--provider`, `-p` | AI provider to use (`anthropic` or `gemini`) |
+| Argument           | Description                                      |
+| ------------------ | ------------------------------------------------ |
+| `--provider`, `-p` | AI provider to use (`anthropic` or `gemini`)     |
 | `--path`, `--repo` | Path to the repository to analyze (default: `.`) |
-| `--output`, `-o` | Output filename (default: `README.md`) |
-| `--dry-run`, `-d` | Generate the README without writing to disk |
+| `--output`, `-o`   | Output filename (default: `README.md`)           |
+| `--dry-run`, `-d`  | Generate the README without writing to disk      |
 
 ### GitHub Action
 
@@ -49,12 +49,12 @@ This tool can be integrated into your CI/CD pipeline using the provided `action.
 
 Configure the tool using environment variables. Bun automatically loads variables from a `.env` file if present.
 
-| Variable | Description | Default |
-| --- | --- | --- |
-| `README_AI_PROVIDER` | AI provider to use (`gemini` or `anthropic`) | `gemini` |
-| `GEMINI_API_KEY` | API key from [Google AI Studio](https://aistudio.google.com) | - |
-| `ANTHROPIC_API_KEY` | API key from [Anthropic Console](https://console.anthropic.com) | - |
-| `NODE_ENV` | Environment mode (`development` or `production`) | - |
+| Variable             | Description                                                     | Default  |
+| -------------------- | --------------------------------------------------------------- | -------- |
+| `README_AI_PROVIDER` | AI provider to use (`gemini` or `anthropic`)                    | `gemini` |
+| `GEMINI_API_KEY`     | API key from [Google AI Studio](https://aistudio.google.com)    | -        |
+| `ANTHROPIC_API_KEY`  | API key from [Anthropic Console](https://console.anthropic.com) | -        |
+| `NODE_ENV`           | Environment mode (`development` or `production`)                | -        |
 
 ### Supported Models
 
