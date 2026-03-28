@@ -1,5 +1,4 @@
 import { execSync } from "child_process";
-import { log } from "console";
 import fs from "fs";
 import path from "path";
 
@@ -128,7 +127,8 @@ function readExistingReadme(repoPath: string): string | null {
 }
 
 export function gatherContext(repoPath: string): RepoContext {
-  console.log("Gathering repo contxt...");
+  console.log(`\n Gathering repo context...`);
+  console.log(`   Target: ${repoPath}`);
 
   const packageJson = readPackageJson(repoPath);
   console.log("Gathered package.json");

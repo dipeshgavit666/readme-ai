@@ -3,6 +3,9 @@
   "module": "index.ts",
   "type": "module",
   "private": true,
+  "bin": {
+    "readme-ai": "./src/index.ts"
+  },
   "scripts": {
     "dev": "bun run src/index.ts",
     "build": "tsc"

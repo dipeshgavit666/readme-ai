@@ -14,28 +14,6 @@ type CLIArgs = {
   help: boolean;
 };
 
-const providerName = (process.env.README_AI_PROVIDER ?? "gemini") as
-  | "anthropic"
-  | "gemini";
-
-const repoPath = process.cwd();
-
-console.log(`\n Readme.ai starting...`);
-console.log(`   Provider : ${providerName}`);
-console.log(`   Repo     : ${repoPath}\n`);
-
-const provider = createProvider(providerName);
-const context = gatherContext(repoPath);
-const readme = await generateReadme(context, provider);
-const result = writeReadme(readme, repoPath);
-
-console.log("\n Done!");
-console.log(`   Written  : ${result.outputPath}`);
-console.log(`   Size     : ${result.bytesWritten} bytes`);
-if (result.backedUp) {
-  console.log(`   Backup   : ${result.backupPath}`);
-}
-
 function parseArgs(argv: string[]): CLIArgs {
   const args = argv.slice(2);
 
@@ -109,7 +87,7 @@ function parseArgs(argv: string[]): CLIArgs {
       }
 
       default: {
-        console.warn(`Unknown argument: ${arg}`);
+        console.warn(`⚠️  Unknown argument: ${arg}`);
         i += 1;
       }
     }
@@ -146,16 +124,9 @@ ENVIRONMENT VARIABLES
   GEMINI_API_KEY        Required when using gemini provider
 
 EXAMPLES
-  # Generate README for current repo using gemini
   readme-ai
-
-  # Use anthropic for a different repo
   readme-ai --provider anthropic --path ./my-app
-
-  # Preview without writing
   readme-ai --dry-run
-
-  # Save to a different filename
   readme-ai --output CONTRIBUTING.md
 `);
 }
@@ -178,14 +149,12 @@ async function main(): Promise<void> {
   console.log("");
 
   if (!fs.existsSync(args.repoPath)) {
-    console.error(`Repo path does not exist: ${args.repoPath}`);
+    console.error(` Repo path does not exist: ${args.repoPath}`);
     process.exit(1);
   }
 
   const provider = createProvider(args.provider);
-
   const context = gatherContext(args.repoPath);
-
   const readme = await generateReadme(context, provider);
 
   if (args.dryRun) {
