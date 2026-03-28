@@ -4,7 +4,9 @@ Automated README generation and maintenance powered by LLMs.
 
 ## What it does
 
-`readme-ai` analyzes your project's source code, folder structure, and git history to generate or update professional `README.md` files. It intelligently gathers context from your files—including recent code changes via `git diff`—and utilizes AI models like Claude 3.5/4.5 or Gemini 1.5/3 to draft documentation that stays in sync with your implementation.
+`readme-ai` analyzes your project's source code, folder structure, and git history to generate or update professional `README.md` files. It intelligently gathers context from your files—including recent code changes via `git diff`—and utilizes AI models like Claude or Gemini to draft documentation that stays in sync with your implementation.
+
+The tool automatically validates the generated markdown for quality and creates a backup (`.readme-ai.bak`) of your existing README before performing an atomic write.
 
 ## Why it exists
 
@@ -20,13 +22,24 @@ bun install
 
 ## Usage
 
-To generate a README for the current directory:
+To generate or update the README for the current directory:
 
 ```bash
+# Using default provider (Gemini)
 bun run dev
+
+# Specify a provider and output path
+bun run src/index.ts --provider anthropic --output DOCS.md
 ```
 
-The tool will output the generated markdown directly to your console.
+### CLI Arguments
+
+| Argument           | Description                                      |
+| ------------------ | ------------------------------------------------ |
+| `--provider`, `-p` | AI provider to use (`anthropic` or `gemini`)     |
+| `--path`, `--repo` | Path to the repository to analyze (default: `.`) |
+| `--output`, `-o`   | Output filename (default: `README.md`)           |
+| `--dry-run`, `-d`  | Generate the README without writing to disk      |
 
 ### GitHub Action
 
@@ -34,13 +47,14 @@ This tool can be integrated into your CI/CD pipeline using the provided `action.
 
 ## Configuration
 
-Configure the tool using environment variables. You can create a `.env` file or set them in your shell.
+Configure the tool using environment variables. Bun automatically loads variables from a `.env` file if present.
 
-| Variable             | Description                                                  | Default  |
-| -------------------- | ------------------------------------------------------------ | -------- |
-| `README_AI_PROVIDER` | AI provider to use (`gemini` or `anthropic`)                 | `gemini` |
-| `GEMINI_API_KEY`     | API key from [Google AI Studio](https://aistudio.google.com) | -        |
-| `ANTHROPIC_API_KEY`  | API key from Anthropic Console                               | -        |
+| Variable             | Description                                                     | Default  |
+| -------------------- | --------------------------------------------------------------- | -------- |
+| `README_AI_PROVIDER` | AI provider to use (`gemini` or `anthropic`)                    | `gemini` |
+| `GEMINI_API_KEY`     | API key from [Google AI Studio](https://aistudio.google.com)    | -        |
+| `ANTHROPIC_API_KEY`  | API key from [Anthropic Console](https://console.anthropic.com) | -        |
+| `NODE_ENV`           | Environment mode (`development` or `production`)                | -        |
 
 ### Supported Models
 
@@ -50,8 +64,9 @@ Configure the tool using environment variables. You can create a `.env` file or 
 ## How it works
 
 1. **Context Gathering**: Scans the repository for `package.json` metadata, directory hierarchy, and relevant source files (filtering by common extensions).
-2. **Change Analysis**: Performs a `git diff` to identify what has changed since the last commit, allowing the AI to focus on updates rather than just initial creation.
-3. **Agentic Writing**: Passes the gathered context through a specialized system prompt designed for technical writing, ensuring concise and well-formatted Markdown output.
+2. **Change Analysis**: Performs a `git diff HEAD` to identify recent changes, allowing the AI to prioritize updates based on your latest work.
+3. **Agentic Writing**: Passes the gathered context through a specialized system prompt designed for technical writing to ensure concise, well-formatted output.
+4. **Safe Writing**: Validates that the AI response is non-empty and starts with a proper H1 header before performing an atomic write with a file backup.
 
 ## How to contribute
 
@@ -61,4 +76,4 @@ Configure the tool using environment variables. You can create a `.env` file or 
 
 ## License
 
-All rights reserved. (No license specified in `package.json`).
+This project is currently private and does not have an open-source license. All rights reserved.
