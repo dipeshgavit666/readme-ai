@@ -9,12 +9,15 @@ export type ProviderName = "anthropic" | "gemini";
 import { AnthropicProvider } from "./anthropic.ts";
 import { GeminiProvider } from "./gemini.ts";
 
-export function createProvider(name: ProviderName = "gemini"): AIProvider {
+export function createProvider(
+  name: ProviderName = "gemini",
+  apiKey?: string,
+): AIProvider {
   switch (name) {
     case "anthropic":
-      return new AnthropicProvider();
+      return new AnthropicProvider(undefined, apiKey);
     case "gemini":
-      return new GeminiProvider();
+      return new GeminiProvider(undefined, apiKey);
     default:
       throw new Error(`Unknown provider: ${name}`);
   }

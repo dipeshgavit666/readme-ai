@@ -7,16 +7,16 @@ export class GeminiProvider implements AIProvider {
   private client: GoogleGenAI;
   private model: string;
 
-  constructor(model: string = "gemini-3-flash-preview") {
-    const apiKey = process.env.GEMINI_API_KEY;
+  constructor(model: string = "gemini-3-flash-preview", apiKey?: string) {
+    const key = apiKey || process.env.GEMINI_API_KEY;
 
-    if (!apiKey) {
+    if (!key) {
       throw new Error(
         "GEMINI_API_KEY is not set. Get a free key at https://aistudio.google.com",
       );
     }
 
-    this.client = new GoogleGenAI({ apiKey });
+    this.client = new GoogleGenAI({ apiKey: key });
     this.model = model;
   }
 

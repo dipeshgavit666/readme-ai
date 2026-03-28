@@ -1,9 +1,12 @@
+#!/usr/bin/env node
 import path from "path";
 import fs from "fs";
 import { gatherContext } from "./context.ts";
 import { generateReadme } from "./agent.ts";
 import { createProvider } from "./providers/types.ts";
 import { writeReadme } from "./writer.ts";
+import { readConfig } from "./config.ts";
+import { runSetup } from "./setup.ts";
 import type { ProviderName } from "./providers/types.ts";
 
 type CLIArgs = {
@@ -12,18 +15,26 @@ type CLIArgs = {
   output: string;
   dryRun: boolean;
   help: boolean;
+  setup: boolean;
 };
 
 function parseArgs(argv: string[]): CLIArgs {
   const args = argv.slice(2);
+  const config = readConfig();
 
   const result: CLIArgs = {
-    provider: (process.env.README_AI_PROVIDER as ProviderName) ?? "gemini",
+    provider:
+      (process.env.README_AI_PROVIDER as ProviderName) ??
+      config?.defaultProvider ??
+      "gemini",
     repoPath: process.cwd(),
     output: "README.md",
     dryRun: false,
     help: false,
+    setup: args[0] === "setup",
   };
+
+  if (result.setup) return result;
 
   let i = 0;
   while (i < args.length) {
@@ -87,7 +98,7 @@ function parseArgs(argv: string[]): CLIArgs {
       }
 
       default: {
-        console.warn(`⚠️  Unknown argument: ${arg}`);
+        console.warn(` Unknown argument: ${arg}`);
         i += 1;
       }
     }
@@ -134,10 +145,28 @@ EXAMPLES
 async function main(): Promise<void> {
   const args = parseArgs(process.argv);
 
+  if (args.setup) {
+    await runSetup();
+    return;
+  }
+
   if (args.help) {
     printHelp();
     process.exit(0);
   }
+
+  const config = readConfig();
+  if (!config) {
+    console.log(" No config found. Running setup first...\n");
+    await runSetup();
+    const newConfig = readConfig();
+    if (!newConfig) {
+      console.error(" Setup failed. Please run 'readme-ai setup' manually.");
+      process.exit(1);
+    }
+  }
+
+  const finalConfig = readConfig()!;
 
   console.log(`\n Readme.ai`);
   console.log(`   Provider : ${args.provider}`);
@@ -153,7 +182,12 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  const provider = createProvider(args.provider);
+  const apiKey =
+    args.provider === "gemini"
+      ? finalConfig.geminiApiKey
+      : finalConfig.anthropicApiKey;
+
+  const provider = createProvider(args.provider, apiKey || undefined);
   const context = gatherContext(args.repoPath);
   const readme = await generateReadme(context, provider);
 

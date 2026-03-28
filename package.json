@@ -2,14 +2,18 @@
   "name": "readme-ai",
   "module": "index.ts",
   "type": "module",
-  "private": true,
+  "description": "AI-powered CLI that reads your codebase and generates your README automatically.",
   "bin": {
-    "readme-ai": "./src/index.ts"
+    "readme-ai": "./dist/index.js"
   },
   "scripts": {
     "dev": "bun run src/index.ts",
-    "build": "tsc"
+    "build": "bun build src/index.ts --outdir dist --target node",
+    "prepublishOnly": "bun run build"
   },
+  "files": [
+    "dist/"
+  ],
   "devDependencies": {
     "@types/bun": "latest",
     "@types/node": "^25.5.0"
