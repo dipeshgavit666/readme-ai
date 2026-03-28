@@ -2,91 +2,121 @@
 
 AI-powered CLI that reads your codebase and generates your README automatically.
 
+[![npm version](https://img.shields.io/npm/v/@dipeshgavit666/readme-ai.svg)](https://www.npmjs.com/package/@dipeshgavit666/readme-ai)
+[![npm downloads](https://img.shields.io/npm/dm/@dipeshgavit666/readme-ai.svg)](https://www.npmjs.com/package/@dipeshgavit666/readme-ai)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## What it does
 
-`readme-ai` analyzes your project's source code, directory structure, and git history to generate or update professional `README.md` files. It leverages Large Language Models (LLMs) like Claude and Gemini to understand the technical context of your repository, including recent changes detected via `git diff`.
-
-## Why it exists
-
-Technical documentation often lags behind code implementation. `readme-ai` eliminates the manual overhead of keeping documentation in sync by providing an automated, context-aware writing agent that ensures your project's documentation is always accurate and concise.
+`readme-ai` analyzes your project's source code, directory structure, and git history to generate or update professional `README.md` files. It supports Google Gemini (free) and Anthropic Claude as AI providers.
 
 ## Installation
 
-This project requires [Bun](https://bun.sh).
+```bash
+npm install -g @dipeshgavit666/readme-ai
+```
+
+That's it. No cloning, no building, no Bun required.
+
+## Getting started
+
+**Step 1 — configure your API keys (one time only):**
 
 ```bash
-# Clone the repository
-git clone https://github.com/dipeshgavit666/readme-ai.git
-cd readme-ai
+readme-ai setup
+```
 
-# Install dependencies
-bun install
+This launches an interactive wizard that saves your keys to `~/.readme-ai/config.json`.
+You'll need at least one API key:
 
-# Build the project
-bun run build
+- **Gemini** (free) — get one at [aistudio.google.com](https://aistudio.google.com)
+- **Anthropic** (paid) — get one at [console.anthropic.com](https://console.anthropic.com)
+
+**Step 2 — generate your README:**
+
+```bash
+# generate README for the current directory
+readme-ai
+
+# generate README for a different repo
+readme-ai --path ./my-other-project
+
+# preview without writing to disk
+readme-ai --dry-run
 ```
 
 ## Usage
 
-First, initialize the tool with your API keys:
-
 ```bash
-bun run dev setup
+readme-ai [command] [options]
 ```
 
-To generate or update a README in the current directory:
+### Commands
+
+| Command | Description                              |
+| :------ | :--------------------------------------- |
+| `setup` | Configure your API keys (run this first) |
+
+### Options
+
+| Option       | Short    | Description                                               |
+| :----------- | :------- | :-------------------------------------------------------- |
+| `--provider` | `-p`     | AI provider to use (`gemini` or `anthropic`)              |
+| `--path`     | `--repo` | Path to the repo to document (default: current directory) |
+| `--output`   | `-o`     | Output filename (default: `README.md`)                    |
+| `--dry-run`  | `-d`     | Preview output without writing to disk                    |
+| `--help`     | `-h`     | Show help message                                         |
+
+### Examples
 
 ```bash
-# Using default provider (Gemini)
-bun run dev
+# use gemini (default, free)
+readme-ai
 
-# Using a specific provider and custom path
-bun run dev --provider anthropic --path ../another-repo
+# use anthropic
+readme-ai --provider anthropic
 
-# Dry run (output to console only)
-bun run dev --dry-run
+# run on a different repo
+readme-ai --path /home/user/projects/my-app
+
+# preview without writing
+readme-ai --dry-run
+
+# save to a different filename
+readme-ai --output DOCS.md
 ```
-
-### CLI Arguments
-
-| Argument | Short | Description |
-| :--- | :--- | :--- |
-| `setup` | - | Run the configuration wizard for API keys |
-| `--provider` | `-p` | AI provider to use (`anthropic` or `gemini`) |
-| `--path` | `--repo` | Path to the repository to analyze (default: `.`) |
-| `--output` | `-o` | Output filename (default: `README.md`) |
-| `--dry-run` | `-d` | Generate the README without writing to disk |
-| `--help` | `-h` | Show help message |
 
 ## Configuration
 
-Configuration is stored in `~/.readme-ai/config.json`. You can also use environment variables, which will override the config file.
+Configuration is stored at `~/.readme-ai/config.json` after running `readme-ai setup`.
+Environment variables override the config file if both are set.
 
-| Variable | Description | Default |
-| :--- | :--- | :--- |
-| `README_AI_PROVIDER` | Default AI provider | `gemini` |
-| `GEMINI_API_KEY` | API key from [Google AI Studio](https://aistudio.google.com) | - |
-| `ANTHROPIC_API_KEY` | API key from [Anthropic Console](https://console.anthropic.com) | - |
+| Variable             | Description                                                     |
+| :------------------- | :-------------------------------------------------------------- |
+| `README_AI_PROVIDER` | Default provider (`gemini` or `anthropic`)                      |
+| `GEMINI_API_KEY`     | API key from [Google AI Studio](https://aistudio.google.com)    |
+| `ANTHROPIC_API_KEY`  | API key from [Anthropic Console](https://console.anthropic.com) |
 
-### Supported Models
-- **Google Gemini**: Uses `gemini-3-flash-preview` by default.
-- **Anthropic Claude**: Uses `claude-haiku-4-5-20251001` by default.
+### Supported models
+
+- **Google Gemini** — `gemini-2.0-flash` (free tier available)
+- **Anthropic Claude** — `claude-haiku-4-5-20251001`
 
 ## How it works
 
-1. **Context Gathering**: The tool scans for `package.json`, identifies project structure, and reads relevant source files (supporting `.ts`, `.py`, `.go`, `.rs`, `.js`, etc.).
-2. **Git Integration**: It analyzes `git diff HEAD` to understand recent logic changes and ensure the documentation reflects the latest updates.
-3. **Safety First**: Before writing, it creates a backup of your existing README at `.readme-ai.bak`.
-4. **Validation**: The generated content is validated to ensure it is valid Markdown and meets minimum length requirements before saving.
+1. **Context gathering** — scans `package.json`, folder structure, and source files (`.ts`, `.js`, `.py`, `.go`, `.rs`, and more)
+2. **Git integration** — reads `git diff HEAD` to understand what recently changed and reflect it accurately
+3. **AI generation** — sends a structured prompt to your chosen provider and gets back clean markdown
+4. **Safe writing** — backs up your existing README to `.readme-ai.bak` before overwriting
+5. **Validation** — checks the output is valid markdown before saving
 
-## How to contribute
+## Contributing
 
-1. Fork the repository.
-2. Create a feature branch.
-3. Submit a pull request with a description of your changes.
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feat/my-feature`)
+3. Commit your changes (`git commit -m 'feat: add my feature'`)
+4. Push and open a pull request
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+MIT — see [LICENSE](LICENSE) for details.
