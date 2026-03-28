@@ -37,25 +37,26 @@ bun run dev --dry-run
 
 ### CLI Arguments
 
-| Argument | Short | Description |
-| :--- | :--- | :--- |
-| `--provider` | `-p` | AI provider to use (`anthropic` or `gemini`) |
-| `--path` | `--repo` | Path to the repository to analyze (default: `.`) |
-| `--output` | `-o` | Output filename (default: `README.md`) |
-| `--dry-run` | `-d` | Generate the README without writing to disk |
-| `--help` | `-h` | Show help message |
+| Argument     | Short    | Description                                      |
+| :----------- | :------- | :----------------------------------------------- |
+| `--provider` | `-p`     | AI provider to use (`anthropic` or `gemini`)     |
+| `--path`     | `--repo` | Path to the repository to analyze (default: `.`) |
+| `--output`   | `-o`     | Output filename (default: `README.md`)           |
+| `--dry-run`  | `-d`     | Generate the README without writing to disk      |
+| `--help`     | `-h`     | Show help message                                |
 
 ## Configuration
 
 Configure the tool using environment variables. Bun automatically loads variables from a `.env` file.
 
-| Variable | Description | Default |
-| :--- | :--- | :--- |
-| `README_AI_PROVIDER` | Default AI provider | `gemini` |
-| `GEMINI_API_KEY` | API key from [Google AI Studio](https://aistudio.google.com) | - |
-| `ANTHROPIC_API_KEY` | API key from [Anthropic Console](https://console.anthropic.com) | - |
+| Variable             | Description                                                     | Default  |
+| :------------------- | :-------------------------------------------------------------- | :------- |
+| `README_AI_PROVIDER` | Default AI provider                                             | `gemini` |
+| `GEMINI_API_KEY`     | API key from [Google AI Studio](https://aistudio.google.com)    | -        |
+| `ANTHROPIC_API_KEY`  | API key from [Anthropic Console](https://console.anthropic.com) | -        |
 
 ### Supported Models
+
 - **Google Gemini**: Uses `gemini-3-flash-preview` by default.
 - **Anthropic Claude**: Uses `claude-haiku-4-5-20251001` by default.
 
@@ -73,5 +74,3 @@ Configure the tool using environment variables. Bun automatically loads variable
 3. Submit a pull request with a clear description of your changes.
 
 ## License
-
-This project is currently private. All rights reserved.
