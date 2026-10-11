@@ -1,6 +1,6 @@
 # readme-ai
 
-AI-powered CLI that reads your codebase and generates your README automatically.
+AI-powered CLI that reads your codebase and maintain your README.
 
 [![npm version](https://img.shields.io/npm/v/@dipeshgavit666/readme-ai.svg)](https://www.npmjs.com/package/@dipeshgavit666/readme-ai)
 [![npm downloads](https://img.shields.io/npm/dm/@dipeshgavit666/readme-ai.svg)](https://www.npmjs.com/package/@dipeshgavit666/readme-ai)
